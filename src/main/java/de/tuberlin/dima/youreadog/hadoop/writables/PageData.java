@@ -1,8 +1,8 @@
 package de.tuberlin.dima.youreadog.hadoop.writables;
 
+import com.google.common.collect.Iterables;
+import de.tuberlin.dima.youreadog.extraction.Resource;
 import org.apache.hadoop.io.Writable;
-
-import de.tuberlin.dima.youreadog.extraction.RessourceObject;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -20,7 +20,7 @@ public class PageData implements Writable {
   public PageData() {
   }
 
-  public void set(String uri, String observationTime, Set<String> allLinks, Set<RessourceObject> allResources) {
+  public void set(String uri, String observationTime, Set<String> allLinks, Iterable<Resource> allResources) {
     this.uri = uri;
     this.observationTime = observationTime;
 
@@ -31,9 +31,9 @@ public class PageData implements Writable {
     }
 
     n = 0;
-    resources = new String[allResources.size()];
-    for (RessourceObject resource : allResources) {
-      resources[n++] = resource.getUrl();
+    resources = new String[Iterables.size(allResources)];
+    for (Resource resource : allResources) {
+      resources[n++] = resource.url();
     }
   }
 

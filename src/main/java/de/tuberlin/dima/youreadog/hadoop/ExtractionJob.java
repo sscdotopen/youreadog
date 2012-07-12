@@ -1,8 +1,9 @@
 package de.tuberlin.dima.youreadog.hadoop;
 
+import com.google.common.collect.Iterables;
 import de.tuberlin.dima.youreadog.extraction.LinkExtractor;
 import de.tuberlin.dima.youreadog.extraction.ResourceExtractor;
-import de.tuberlin.dima.youreadog.extraction.RessourceObject;
+import de.tuberlin.dima.youreadog.extraction.Resource;
 import de.tuberlin.dima.youreadog.hadoop.writables.PageData;
 import edu.umd.cloud9.collection.clue.ClueWarcInputFormat;
 import edu.umd.cloud9.collection.clue.ClueWarcRecord;
@@ -27,6 +28,10 @@ public class ExtractionJob extends HadoopJob {
 
   public static enum Counters {
     PAGES, LINKS, RESOURCES
+  }
+
+  public static void main(String[] args) throws Exception {
+    new ExtractionJob().run(args);
   }
 
   @Override
@@ -83,11 +88,11 @@ public class ExtractionJob extends HadoopJob {
       }
 
       Set<String> links = linkExtractor.extractLinks(uri, record.getContentUTF8());
-      Set<RessourceObject> resources = resourceExtractor.extractScripts(uri, record.getContentUTF8());
+      Iterable<Resource> resources = resourceExtractor.extractResources(uri, record.getContentUTF8());
 
       reporter.incrCounter(ExtractionJob.Counters.PAGES, 1);
       reporter.incrCounter(ExtractionJob.Counters.LINKS, links.size());
-      reporter.incrCounter(ExtractionJob.Counters.RESOURCES, resources.size());
+      reporter.incrCounter(ExtractionJob.Counters.RESOURCES, Iterables.size(resources));
 
       pageData.set(uri, observationTime, links, resources);
       collector.collect(NullWritable.get(), pageData);
