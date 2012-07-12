@@ -81,10 +81,19 @@ class URLNormalizer {
     }
 
   public String expandIfInternalLink(String prefixForInternalLinks, String link) {
-   if (!link.startsWith("http")) {
+   if (!link.startsWith("http") && !link.startsWith("ftp") && !link.startsWith("https")) {
      return prefixForInternalLinks + link;
    }
    return link;
+  }
+  
+  public String extractDomain(String url) {	  
+      // extract domain from url
+      if(url.matches("((ht|f)tp(s?))://((\\w|\\W){1,})/(.*)")) {
+    	  url = url.substring(url.indexOf("://") + 3);
+    	  url = url.substring(0, url.indexOf("/"));
+      }
+      return url;
   }
 
   public String createPrefixForInternalLinks(String sourceUrl) {
@@ -118,7 +127,7 @@ class URLNormalizer {
         if (!urlString.startsWith(protocol))        // protocol was lowercased
             changed = true;
 
-        if ("http".equals(protocol) || "ftp".equals(protocol)) {
+        if ("https".equals(protocol) || "http".equals(protocol) || "ftp".equals(protocol)) {
 
             if (host != null) {
                 String newHost = host.toLowerCase();    // lowercase host
