@@ -92,7 +92,7 @@ public class ExtractionJob extends HadoopJob {
         return;
       }
 
-      System.out.println(uri);
+      //System.out.println(uri);
 
       String observationTime = "";
 

@@ -19,48 +19,37 @@
 
 package de.tuberlin.dima.youreadog.hadoop.writables;
 
-import com.google.common.collect.Iterables;
 import org.apache.hadoop.io.Writable;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class ExtractedResources implements Writable {
+public class LongArrayWritable implements Writable {
 
-  private String observationTime;
+  private long[] values;
 
-  private Resource[] resources;
-
-  public ExtractedResources() {
+  public LongArrayWritable() {
   }
 
-  public void set( String observationTime, Iterable<Resource> allResources) {
-    this.observationTime = observationTime;
-    resources = Iterables.toArray(allResources, Resource.class);
-  }
-
-  public Resource[] resources() {
-    return resources;
+  public void set(long[] values) {
+    this.values = values;
   }
 
   @Override
   public void write(DataOutput out) throws IOException {
-    out.writeUTF(observationTime);
-    out.writeInt(resources.length);
-    for (int n = 0; n < resources.length; n++) {
-      resources[n].write(out);
+    out.writeInt(values.length);
+    for (long value : values) {
+      out.writeLong(value);
     }
   }
 
   @Override
   public void readFields(DataInput in) throws IOException {
-    observationTime = in.readUTF();
-    resources = new Resource[in.readInt()];
-    for (int n = 0; n < resources.length; n++) {
-      resources[n] = new Resource();
-      resources[n].readFields(in);
+    int length = in.readInt();
+    values = new long[length];
+    for (int n = 0; n < length; n++) {
+      values[n] = in.readLong();
     }
   }
-
 }

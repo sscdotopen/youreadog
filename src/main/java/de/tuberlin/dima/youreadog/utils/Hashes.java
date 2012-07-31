@@ -17,29 +17,18 @@
  *
  */
 
-package de.tuberlin.dima.youreadog;
+package de.tuberlin.dima.youreadog.utils;
 
-import de.tuberlin.dima.youreadog.hadoop.ConstructWebgraphJob;
-import org.apache.hadoop.util.ToolRunner;
+import com.google.common.base.Charsets;
+import org.apache.mahout.math.MurmurHash;
 
-public class Play {
+public class Hashes {
 
-  public static void main(String[] args) throws Exception {
+  private static final int SEED = 0xbeef;
 
-   /* ToolRunner.run(new ExtractionJob(), new String[] {
-        "--input", "/home/ssc/Entwicklung/datasets/clueweb-single/",
-        "--output", "/tmp/clueweb-extraction"
-    });
+  private Hashes() {}
 
-    ToolRunner.run(new PageIndexJob(), new String[] {
-        "--input", "/tmp/clueweb-extraction/",
-        "--output", "/tmp/clueweb-index"
-    });              */
-
-    ToolRunner.run(new ConstructWebgraphJob(), new String[] {
-        "--input", "/tmp/clueweb-extraction/",
-        "--output", "/tmp/clueweb-webgraph"
-    });
+  public static long hash64(String value) {
+    return MurmurHash.hash64A(value.getBytes(Charsets.UTF_8), SEED);
   }
-
 }

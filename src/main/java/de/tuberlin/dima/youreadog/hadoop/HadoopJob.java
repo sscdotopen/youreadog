@@ -41,8 +41,8 @@ public abstract class HadoopJob extends Configured implements Tool {
     }
 
     Map<String,String> parsedArgs = Maps.newHashMap();
-    for (int n = 0; n < args.length; n+=2) {
-      parsedArgs.put(args[n], args[n+1]);
+    for (int n = 0; n < args.length; n += 2) {
+      parsedArgs.put(args[n], args[n + 1]);
     }
     return Collections.unmodifiableMap(parsedArgs);
   }
