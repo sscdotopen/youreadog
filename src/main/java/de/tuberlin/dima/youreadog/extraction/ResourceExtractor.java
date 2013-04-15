@@ -25,7 +25,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.google.common.collect.Sets;
-import de.tuberlin.dima.youreadog.hadoop.writables.Resource;
 
 public class ResourceExtractor {
 

@@ -17,7 +17,7 @@
  *
  */
 
-package de.tuberlin.dima.youreadog.hadoop.writables;
+package de.tuberlin.dima.youreadog.extraction;
 
 import com.google.common.base.Preconditions;
 import org.apache.hadoop.io.Writable;
