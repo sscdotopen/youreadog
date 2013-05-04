@@ -28,7 +28,6 @@ import de.tuberlin.dima.youreadog.hadoop.io.ArcInputFormat;
 import de.tuberlin.dima.youreadog.hadoop.io.ArcRecord;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapred.JobClient;

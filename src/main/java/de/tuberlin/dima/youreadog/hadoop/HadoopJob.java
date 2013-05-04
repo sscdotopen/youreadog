@@ -48,7 +48,7 @@ public abstract class HadoopJob extends Configured implements Tool {
   }
 
   protected JobConf mapOnly(Path input, Path output, Class inputFormatClass, Class outputFormatClass, Class mapperClass,
-      Class keyClass, Class valueClass) {
+                            Class keyClass, Class valueClass) {
     JobConf conf = new JobConf(getClass());
     conf.setJobName(mapperClass.getSimpleName());
 
