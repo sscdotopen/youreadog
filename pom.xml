@@ -24,9 +24,9 @@
       <version>0.20.203.0</version>
     </dependency>
     <dependency>
-      <groupId>org.apache.mahout</groupId>
-      <artifactId>mahout-math</artifactId>
-      <version>0.7</version>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-core</artifactId>
+      <version>4.2.1</version>
     </dependency>
 
     <!-- commoncrawl dependencies -->

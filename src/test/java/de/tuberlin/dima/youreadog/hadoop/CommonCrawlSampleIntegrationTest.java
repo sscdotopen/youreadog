@@ -19,6 +19,7 @@
 
 package de.tuberlin.dima.youreadog.hadoop;
 
+import de.tuberlin.dima.youreadog.hadoop.util.TopWatchers;
 import org.apache.hadoop.util.ToolRunner;
 
 public class CommonCrawlSampleIntegrationTest {
@@ -26,10 +27,18 @@ public class CommonCrawlSampleIntegrationTest {
   public static void main(String[] args) throws Exception {
 
     ExtractionJob extraction = new ExtractionJob();
+    AggregateWatchersJob aggregateWatchers = new AggregateWatchersJob();
+
     ToolRunner.run(extraction, new String[] {
         "--input", "/home/ssc/Entwicklung/projects/youreadog/src/test/resources/commoncrawl/",
-        "--output", "/tmp/commoncrawl"
+        "--output", "/tmp/commoncrawl-extraction/"
     });
 
+    ToolRunner.run(aggregateWatchers, new String[] {
+        "--input", "/tmp/commoncrawl-extraction/",
+        "--output", "/tmp/commoncrawl-watchers/"
+    });
+
+    TopWatchers.print("/tmp/commoncrawl-watchers/part-00000", 100);
   }
 }

@@ -50,7 +50,7 @@ public abstract class HadoopJob extends Configured implements Tool {
   protected JobConf mapOnly(Path input, Path output, Class inputFormatClass, Class outputFormatClass, Class mapperClass,
       Class keyClass, Class valueClass) {
     JobConf conf = new JobConf(getClass());
-    conf.setJobName(getClass().getSimpleName() + "-" + mapperClass.getSimpleName());
+    conf.setJobName(mapperClass.getSimpleName());
 
     conf.setNumReduceTasks(0);
 
@@ -65,6 +65,30 @@ public abstract class HadoopJob extends Configured implements Tool {
     conf.setOutputValueClass(valueClass);
 
     conf.setMapperClass(mapperClass);
+
+    return conf;
+  }
+
+  protected JobConf mapReduce(Path input, Path output, Class inputFormatClass, Class outputFormatClass,
+                              Class mapperClass, Class mapperKeyClass, Class mapperValueClass,
+                              Class reducerClass, Class reducerKeyClass, Class reducerValueClass) {
+    JobConf conf = new JobConf(getClass());
+    conf.setJobName(mapperClass.getSimpleName() + "-" + reducerClass.getSimpleName());
+
+    FileOutputFormat.setOutputPath(conf, output);
+    FileOutputFormat.setCompressOutput(conf, true);
+
+    FileInputFormat.addInputPath(conf, input);
+    conf.setInputFormat(inputFormatClass);
+    conf.setOutputFormat(outputFormatClass);
+
+    conf.setMapperClass(mapperClass);
+    conf.setMapOutputKeyClass(mapperKeyClass);
+    conf.setMapOutputValueClass(mapperValueClass);
+
+    conf.setReducerClass(reducerClass);
+    conf.setOutputKeyClass(reducerKeyClass);
+    conf.setOutputValueClass(reducerValueClass);
 
     return conf;
   }

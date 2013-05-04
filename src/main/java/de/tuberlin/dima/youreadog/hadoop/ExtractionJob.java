@@ -29,6 +29,7 @@ import de.tuberlin.dima.youreadog.hadoop.io.ArcRecord;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapred.JobClient;
 import org.apache.hadoop.mapred.JobConf;
@@ -60,7 +61,7 @@ public class ExtractionJob extends HadoopJob {
     Path outputPath = new Path(parsedArgs.get("--output"));
 
     JobConf conf = mapOnly(inputPath, outputPath, ArcInputFormat.class, SequenceFileOutputFormat.class,
-        CommonCrawlExtractionMapper.class, NullWritable.class, NullWritable.class);
+        CommonCrawlExtractionMapper.class, Text.class, Text.class);
 
     FileSystem.get(conf).delete(outputPath, true);
     JobClient.runJob(conf);
@@ -68,17 +69,19 @@ public class ExtractionJob extends HadoopJob {
     return 0;
   }
 
-  static class CommonCrawlExtractionMapper extends MapReduceBase
-      implements Mapper<Writable, ArcRecord, NullWritable, NullWritable> {
+  static class CommonCrawlExtractionMapper extends MapReduceBase implements Mapper<Writable, ArcRecord, Text, Text> {
+
+    private final Text url = new Text();
+    private final Text watchers = new Text();
 
     private final ResourceExtractor resourceExtractor = new ResourceExtractor();
 
     @Override
-    public void map(Writable key, ArcRecord record, OutputCollector<NullWritable, NullWritable> collector,
+    public void map(Writable key, ArcRecord record, OutputCollector<Text, Text> collector,
         Reporter reporter) throws IOException {
 
       if ("text/html".equals(record.getContentType())) {
-        System.out.println(record.getURL());
+        //System.out.println(record.getURL());
 
         String charset = null;
 
@@ -108,9 +111,18 @@ public class ExtractionJob extends HadoopJob {
           reporter.incrCounter(ExtractionJob.Counters.PAGES, 1);
           reporter.incrCounter(ExtractionJob.Counters.RESOURCES, Iterables.size(resources));
 
+          StringBuilder concatenatedResources = new StringBuilder();
           for (Resource resource : resources) {
-            System.out.println("\t" + resource.url() + " " +  resource.type());
+            //System.out.println("\t" + resource.url() + " " +  resource.type());
+            concatenatedResources.append(resource.url());
+            concatenatedResources.append(',');
           }
+
+          url.set(record.getURL());
+          watchers.set(concatenatedResources.toString());
+
+          collector.collect(url, watchers);
+
         } catch (ProtocolException pe) {
           // do nothing here
         } catch (Exception e) {
