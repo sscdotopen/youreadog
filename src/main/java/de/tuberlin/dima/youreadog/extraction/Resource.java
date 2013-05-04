@@ -35,8 +35,7 @@ public class Resource implements Writable {
     LINK, IMAGE, SCRIPT, IFRAME, OTHER
   }
 
-  public Resource() {
-  }
+  public Resource() {}
 
   public Resource(String url, Type type) {
     this.url = Preconditions.checkNotNull(url);

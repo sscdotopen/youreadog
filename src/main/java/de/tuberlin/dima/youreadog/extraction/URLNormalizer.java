@@ -27,8 +27,6 @@ import org.apache.oro.text.regex.Perl5Pattern;
 import org.apache.oro.text.regex.Perl5Substitution;
 import org.apache.oro.text.regex.Util;
 
-
-
 /** Converts URLs to a normal form . */
 class URLNormalizer {
 
